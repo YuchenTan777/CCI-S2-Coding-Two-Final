@@ -38,4 +38,142 @@ df = df.loc[df.target_names.isin(['soc.religion.christian', 'rec.sport.hockey', 
 print(df.shape)  #> (2361, 3)
 df.head()
 ```
+![image](https://github.com/YuchenTan777/CCI-S2-Coding-Two-Final/blob/main/pic/import%20dataset.png)
+
+### 2.2 Tokenize Sentences and Clean
+
+Removing the emails, new line characters, single quotes and finally split the sentence into a list of words using gensim’s simple_preprocess(). Setting the deacc=True option removes punctuations.
+
+**Because the data inside the original text is very messy, it is especially important to clean the data**
+
+```
+def sent_to_words(sentences):
+    for sent in sentences:
+        sent = re.sub('\S*@\S*\s?', '', sent)  # remove emails
+        sent = re.sub('\s+', ' ', sent)  # remove newline chars
+        sent = re.sub("\'", "", sent)  # remove single quotes
+        sent = gensim.utils.simple_preprocess(str(sent), deacc=True) 
+        yield(sent)  
+
+# Convert to list
+data = df.content.values.tolist()
+data_words = list(sent_to_words(data))
+print(data_words[:1])
+```
+Results:
+`[['from', 'irwin', 'arnstein', 'subject', 're', 'recommendation', 'on', 'duc', 'summary', 'whats', 'it', 'worth', 'distribution', 'usa', 'expires', 'sat', 'may', 'gmt', 'organization', 'computrac', 'inc', 'richardson', 'tx', 'keywords', 'ducati', 'gts', 'how', 'much', 'lines', 'have', 'line', 'on', 'ducati', 'gts', 'model', 'with', 'on', 'the', 'clock', 'runs', 'very', 'well', 'paint', 'is', 'the', 'bronze', 'brown', 'orange', 'faded', 'out', 'leaks', 'bit', 'of', 'oil', 'and', 'pops', 'out', 'of', 'st', 'with', 'hard', 'accel', 'the', 'shop', 'will', 'fix', 'trans', 'and', 'oil', 'leak', 'they', 'sold', 'the', 'bike', 'to', 'the', 'and', 'only', 'owner', 'they', 'want', 'and', 'am', 'thinking', 'more', 'like', 'any', 'opinions', 'out', 'there', 'please', 'email', 'me', 'thanks', 'it', 'would', 'be', 'nice', 'stable', 'mate', 'to', 'the', 'beemer', 'then', 'ill', 'get', 'jap', 'bike', 'and', 'call', 'myself', 'axis', 'motors', 'tuba', 'irwin', 'honk', 'therefore', 'am', 'computrac', 'richardson', 'tx', 'dod']]`
+
+### 2.3 Build the Bigram, Trigram Models and Lemmatize
+
+Now, form the bigram and trigrams using the Phrases model. This is passed to Phraser() for efficiency in speed of execution.
+Next, lemmatize each word to its root form, keeping only nouns, adjectives, verbs and adverbs.
+We keep only these POS tags because they are the ones contributing the most to the meaning of the sentences. Here, I use spacy for lemmatization.
+
+```
+# Build the bigram and trigram models
+bigram = gensim.models.Phrases(data_words, min_count=5, threshold=100) # higher threshold fewer phrases.
+trigram = gensim.models.Phrases(bigram[data_words], threshold=100)  
+bigram_mod = gensim.models.phrases.Phraser(bigram)
+trigram_mod = gensim.models.phrases.Phraser(trigram)
+
+# !python3 -m spacy download en  # run in terminal once
+def process_words(texts, stop_words=stop_words, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
+    """Remove Stopwords, Form Bigrams, Trigrams and Lemmatization"""
+    texts = [[word for word in simple_preprocess(str(doc)) if word not in stop_words] for doc in texts]
+    texts = [bigram_mod[doc] for doc in texts]
+    texts = [trigram_mod[bigram_mod[doc]] for doc in texts]
+    texts_out = []
+    nlp = spacy.load('en', disable=['parser', 'ner'])
+    for sent in texts:
+        doc = nlp(" ".join(sent)) 
+        texts_out.append([token.lemma_ for token in doc if token.pos_ in allowed_postags])
+    # remove stopwords once more after lemmatization
+    texts_out = [[word for word in simple_preprocess(str(doc)) if word not in stop_words] for doc in texts_out]    
+    return texts_out
+
+data_ready = process_words(data_words)  # processed Text Data!
+```
+**Now that we have the processed data🥳**
+
+### 2.4 Build the Topic Model
+
+```
+# Create Dictionary
+id2word = corpora.Dictionary(data_ready)
+
+# Create Corpus: Term Document Frequency
+corpus = [id2word.doc2bow(text) for text in data_ready]
+
+# Build LDA model
+lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
+                                           id2word=id2word,
+                                           num_topics=4, 
+                                           random_state=100,
+                                           update_every=1,
+                                           chunksize=10,
+                                           passes=10,
+                                           alpha='symmetric',
+                                           iterations=100,
+                                           per_word_topics=True)
+
+pprint(lda_model.print_topics())
+```
+Results:
+```[(0,
+  '0.012*"state" + 0.012*"israeli" + 0.011*"people" + 0.011*"kill" + '
+  '0.009*"attack" + 0.009*"government" + 0.008*"war" + 0.007*"turkish" + '
+  '0.006*"soldier" + 0.006*"greek"'),
+ (1,
+  '0.020*"game" + 0.018*"bike" + 0.017*"write" + 0.012*"article" + '
+  '0.009*"rider" + 0.008*"list" + 0.008*"ride" + 0.007*"score" + '
+  '0.006*"motorcycle" + 0.006*"helmet"'),
+ (2,
+  '0.017*"team" + 0.015*"year" + 0.012*"time" + 0.011*"write" + 0.009*"well" + '
+  '0.009*"first" + 0.009*"play" + 0.008*"look" + 0.008*"help" + 0.008*"name"'),
+ (3,
+  '0.014*"people" + 0.012*"write" + 0.010*"believe" + 0.008*"reason" + '
+  '0.007*"evidence" + 0.006*"question" + 0.006*"thing" + 0.006*"article" + '
+  '0.006*"claim" + 0.005*"faith"')]
+  ```
+  **The decimal after each word can be considered as the probability that the word belongs to the topic, and the probability sum of all words under the topic is 1.**
+
+### 2.5 Analyze the Text
+
+To find out what is the Dominant topic and its percentage contribution in each document
+In LDA models, each document is composed of multiple topics. But, typically only one of the topics is dominant. The below code extracts this dominant topic for each sentence and shows the weight of the topic and the keywords.
+This way, you will know which document belongs predominantly to which topic.
+```
+def format_topics_sentences(ldamodel=None, corpus=corpus, texts=data):
+    # Init output
+    sent_topics_df = pd.DataFrame()
+
+    # Get main topic in each document
+    for i, row_list in enumerate(ldamodel[corpus]):
+        row = row_list[0] if ldamodel.per_word_topics else row_list            
+        # print(row)
+        row = sorted(row, key=lambda x: (x[1]), reverse=True)
+        # Get the Dominant topic, Perc Contribution and Keywords for each document
+        for j, (topic_num, prop_topic) in enumerate(row):
+            if j == 0:  # => dominant topic
+                wp = ldamodel.show_topic(topic_num)
+                topic_keywords = ", ".join([word for word, prop in wp])
+                sent_topics_df = sent_topics_df.append(pd.Series([int(topic_num), round(prop_topic,4), topic_keywords]), ignore_index=True)
+            else:
+                break
+    sent_topics_df.columns = ['Dominant_Topic', 'Perc_Contribution', 'Topic_Keywords']
+
+    # Add original text to the end of the output
+    contents = pd.Series(texts)
+    sent_topics_df = pd.concat([sent_topics_df, contents], axis=1)
+    return(sent_topics_df)
+
+
+df_topic_sents_keywords = format_topics_sentences(ldamodel=lda_model, corpus=corpus, texts=data_ready)
+
+# Format
+df_dominant_topic = df_topic_sents_keywords.reset_index()
+df_dominant_topic.columns = ['Document_No', 'Dominant_Topic', 'Topic_Perc_Contrib', 'Keywords', 'Text']
+df_dominant_topic.head(10)
+```
+
 
