@@ -137,7 +137,9 @@ Results:
   ```
   **The decimal after each word can be considered as the probability that the word belongs to the topic, and the probability sum of all words under the topic is 1.**
 
-### 2.5 Analyze the Text
+## 3 Analyze the Text
+
+### 3.1 Dominant topic
 
 To find out what is the Dominant topic and its percentage contribution in each document
 In LDA models, each document is composed of multiple topics. But, typically only one of the topics is dominant. The below code extracts this dominant topic for each sentence and shows the weight of the topic and the keywords.
@@ -175,5 +177,29 @@ df_dominant_topic = df_topic_sents_keywords.reset_index()
 df_dominant_topic.columns = ['Document_No', 'Dominant_Topic', 'Topic_Perc_Contrib', 'Keywords', 'Text']
 df_dominant_topic.head(10)
 ```
+![image](https://github.com/YuchenTan777/CCI-S2-Coding-Two-Final/blob/main/pic/keywords.png)
 
+### 3.2 Representative sentence
+
+```
+# Display setting to show more characters in column
+pd.options.display.max_colwidth = 100
+
+sent_topics_sorteddf_mallet = pd.DataFrame()
+sent_topics_outdf_grpd = df_topic_sents_keywords.groupby('Dominant_Topic')
+
+for i, grp in sent_topics_outdf_grpd:
+    sent_topics_sorteddf_mallet = pd.concat([sent_topics_sorteddf_mallet, 
+                                             grp.sort_values(['Perc_Contribution'], ascending=False).head(1)], 
+                                            axis=0)
+
+# Reset Index    
+sent_topics_sorteddf_mallet.reset_index(drop=True, inplace=True)
+
+# Format
+sent_topics_sorteddf_mallet.columns = ['Topic_Num', "Topic_Perc_Contrib", "Keywords", "Representative Text"]
+
+# Show
+sent_topics_sorteddf_mallet.head(10)
+```
 
