@@ -20,3 +20,22 @@ LDA Topic Model is a document generation model, which is an unsupervised machine
 
 The use of LDA is the inverse of the above document generation process, i.e., based on a document obtained, to find out the topics of this document, and the words corresponding to these topics.
 
+![image](https://github.com/YuchenTan777/CCI-S2-Coding-Two-Final/blob/main/pic/LDA.jpg)
+> Figure 1.对比传统K-Means等聚类算法，LDA主题模型在文本聚类上有何优缺点？ - 拓端数据科技的回答 - 知乎
+https://www.zhihu.com/question/29778472/answer/1295340045
+
+
+## 2 Data Collection
+
+### 2.1 Import NewsGroups Dataset
+
+I first imported the newsgroup dataset and kept only `4 target_names` categories. These four categories are: motorcycle news, sports news, political news, and religious news.
+
+```
+# Import Dataset
+df = pd.read_json('https://raw.githubusercontent.com/selva86/datasets/master/newsgroups.json')
+df = df.loc[df.target_names.isin(['soc.religion.christian', 'rec.sport.hockey', 'talk.politics.mideast', 'rec.motorcycles']) , :]
+print(df.shape)  #> (2361, 3)
+df.head()
+```
+
