@@ -429,7 +429,15 @@ pyLDAvis.enable_notebook()
 vis = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary=lda_model.id2word)
 vis
 ```
-**If λ is closer to 1, then words that occur more frequently under the topic are more relevant to the topic.
-If λ is closer to 0, then the more specific and exclusive words under that topic are more relevant to the topic**
+**If λ is closer to 1, then words that occur more frequently under the topic are more relevant to the topic.**
+
+**If λ is closer to 0, then the more specific and exclusive words under that topic are more relevant to the topic.**
 
 ![image](https://github.com/YuchenTan777/CCI-S2-Coding-Two-Final/blob/main/pic/visualization/pyLDAvis.png)
+
+## 5 Conclusion 
+
+I started from scratch by importing, cleaning and processing the newsgroups dataset to build the LDA model. Then we saw multiple ways to visualize the outputs of topic models including the word clouds and sentence coloring, which intuitively tells you what topic is dominant in each topic. A t-SNE clustering and the pyLDAVis are provide more details into the clustering of the topics.
+
+It was an interesting attempt to help me better understand the LDA model and the flexibility of the various visualizations. At the same time, I found that there are also many people from other countries who use their own languages to build LDA topic models, such as Chinese. This is different from the way text is processed in English in many ways. I think in the future I can try theme models in multiple languages and use sentiment analysis to complete more visual charts and do some more complex representations.
+
