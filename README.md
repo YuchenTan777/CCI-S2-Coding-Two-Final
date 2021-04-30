@@ -259,7 +259,7 @@ plt.show()
 
 ### 4.2 Word Clouds of Top Keywords
 
-Though we’ve already seen what are the topic keywords in each topic, a word cloud with the size of the words proportional to the weight is a pleasant sight. 
+Though I’ve already seen what are the topic keywords in each topic, a word cloud with the size of the words proportional to the weight is a pleasant sight. 
 
 ```
 from matplotlib import pyplot as plt
