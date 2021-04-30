@@ -444,12 +444,19 @@ It was an interesting attempt to help me better understand the LDA model and the
 ## 6 Reference
 
 [Complete Guide to Topic Modeling](https://nlpforhackers.io/topic-modeling/)
+
 [Topic Modeling and Sentiment Analysis on Amazon Alexa Reviews](https://towardsdatascience.com/topic-modeling-and-sentiment-analysis-on-amazon-alexa-reviews-81e5017294b1)
+
 [Topic Analysis](https://monkeylearn.com/topic-analysis/)
-[Topic modeling visualization – How to present the results of LDA models?[(https://www.machinelearningplus.com/nlp/topic-modeling-visualization-how-to-present-results-lda-models/#6.-What-is-the-Dominant-topic-and-its-percentage-contribution-in-each-document)
+
+[Topic modeling visualization – How to present the results of LDA models?](https://www.machinelearningplus.com/nlp/topic-modeling-visualization-how-to-present-results-lda-models/#6.-What-is-the-Dominant-topic-and-its-percentage-contribution-in-each-document)
+
 [热销商品评论之情感分析案例 - 基于LDA、贝叶斯模型算法实现](https://blog.csdn.net/weixin_42219368/article/details/80840151)
+
 [LDA模型中文文本主题提取丨可视化工具pyLDAvis的使用](https://www.it610.com/article/1296632174824464384.htm)
+
 [LDA on the Texts of Harry Potter-Topic Modeling with Latent Dirichlet Allocation](https://towardsdatascience.com/basic-nlp-on-the-texts-of-harry-potter-topic-modeling-with-latent-dirichlet-allocation-f3c00f77b0f5)
+
 Kwon, H.-J. et al. (2021) ‘Topic Modeling and Sentiment Analysis of Online Review for Airlines’, Information, 12(2), p. 78.
 
 
