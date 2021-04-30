@@ -416,7 +416,7 @@ show(plot)
 ```
 ![image](https://github.com/YuchenTan777/CCI-S2-Coding-Two-Final/blob/main/pic/visualization/t-SNE%20Clustering%20Chart.png)
 
-### 4.5 pyLDAVis
+### 4.5 pyLDAvis
 
 Finally, pyLDAVis is the most commonly used and a nice way to visualise the information contained in a topic model. 
 
