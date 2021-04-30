@@ -140,10 +140,7 @@ Results:
 ## 3 Analyze the Text
 
 ### 3.1 Dominant topic
-
-To find out what is the Dominant topic and its percentage contribution in each document
-In LDA models, each document is composed of multiple topics. But, typically only one of the topics is dominant. The below code extracts this dominant topic for each sentence and shows the weight of the topic and the keywords.
-This way, you will know which document belongs predominantly to which topic.
+To find out what is the Dominant topic and its percentage contribution in each document In LDA models, each document is composed of multiple topics. But, typically only one of the topics is dominant. So I use code extracts this dominant topic for each sentence and shows the weight of the topic and the keywords. This way, we will know which document belongs predominantly to which topic.
 ```
 def format_topics_sentences(ldamodel=None, corpus=corpus, texts=data):
     # Init output
