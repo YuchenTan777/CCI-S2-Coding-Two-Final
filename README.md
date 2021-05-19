@@ -446,7 +446,7 @@ It was an interesting attempt to help me better understand the LDA model and the
 
 [Topic Analysis](https://monkeylearn.com/topic-analysis/)
 
-[Topic modeling visualization – How to present the results of LDA models?](https://towardsdatascience.com/end-to-end-topic-modeling-in-python-latent-dirichlet-allocation-lda-35ce4ed6b3e0)
+[Topic modeling visualization – How to present the results of LDA models?](https://www.machinelearningplus.com/nlp/topic-modeling-visualization-how-to-present-results-lda-models/)
 
 [热销商品评论之情感分析案例 - 基于LDA、贝叶斯模型算法实现](https://blog.csdn.net/weixin_42219368/article/details/80840151)
 
